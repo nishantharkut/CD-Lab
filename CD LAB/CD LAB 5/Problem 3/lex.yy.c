@@ -448,14 +448,17 @@ char *yytext;
 
 typedef struct { int s,e; } Feature;
 
+/* process one input line (one row of intensities) */
 void process_line(const char *raw, int rowno){
     char line[4096];
     char orig[4096];
     strncpy(line, raw, sizeof(line)-1); line[sizeof(line)-1]=0;
+    /* remove trailing newline/cr */
     int L = strlen(line);
     while(L>0 && (line[L-1]=='\n' || line[L-1]=='\r')) line[--L]=0;
     strncpy(orig, line, sizeof(orig)-1); orig[sizeof(orig)-1]=0;
 
+    /* parse intensities */
     int vals[2048], vcnt=0;
     int has_space = 0;
     for(int i=0;i<L;i++) if(isspace((unsigned char)line[i])) { has_space=1; break; }
@@ -484,12 +487,15 @@ void process_line(const char *raw, int rowno){
         return;
     }
 
+    /* build d' */
     char dprime[4096]; int dlen=0;
     for(int i=0;i<vcnt-1;i++){
         int diff = vals[i+1] - vals[i];
         dprime[dlen++] = (diff>0? '+': (diff<0? '-':'0'));
     }
     dprime[dlen]=0;
+
+    /* find all candidate features matching +{1,} 0{0,3} -{1,} */
     Feature feats[4096]; int fcnt=0;
     for(int i=0;i<dlen;i++){
         if(dprime[i] != '+') continue;
@@ -517,6 +523,7 @@ void process_line(const char *raw, int rowno){
         }
     }
 
+    /* remove proper-substring features -> keep only maximal features */
     int keep[4096]; for(int i=0;i<fcnt;i++) keep[i]=1;
     for(int i=0;i<fcnt;i++){
         if(!keep[i]) continue;
@@ -530,6 +537,7 @@ void process_line(const char *raw, int rowno){
         }
     }
 
+    /* collect maximal features */
     Feature maxf[4096]; int mcnt=0;
     for(int i=0;i<fcnt;i++) if(keep[i]) maxf[mcnt++] = feats[i];
 
@@ -541,6 +549,7 @@ void process_line(const char *raw, int rowno){
         return;
     }
 
+    /* sort by start asc, length desc */
     for(int i=0;i<mcnt;i++) for(int j=i+1;j<mcnt;j++){
         int li = maxf[i].e - maxf[i].s + 1;
         int lj = maxf[j].e - maxf[j].s + 1;
@@ -549,6 +558,7 @@ void process_line(const char *raw, int rowno){
         }
     }
 
+    /* choose non-overlapping set preferring earlier start and longer length */
     int chosen[4096]; for(int i=0;i<mcnt;i++) chosen[i]=0;
     int last_end = -1;
     for(int i=0;i<mcnt;i++){
@@ -558,6 +568,7 @@ void process_line(const char *raw, int rowno){
         }
     }
 
+    /* build output with parentheses */
     char out[8192]; int oi=0;
     int idx = 0;
     for(int i=0;i<mcnt;i++){
@@ -572,6 +583,7 @@ void process_line(const char *raw, int rowno){
     for(int t=idx;t<dlen;t++) out[oi++]=dprime[t];
     out[oi]=0;
 
+    /* find longest chosen maximal feature */
     int best_len=0, bs=-1, be=-1;
     for(int i=0;i<mcnt;i++) if(chosen[i]){
         int Lf = maxf[i].e - maxf[i].s + 1;
@@ -590,8 +602,8 @@ void process_line(const char *raw, int rowno){
         printf("Row %d longest maximal feature: <none>\n\n", rowno);
     }
 }
-#line 593 "lex.yy.c"
-#line 594 "lex.yy.c"
+#line 605 "lex.yy.c"
+#line 606 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -808,10 +820,10 @@ YY_DECL
 		}
 
 	{
-#line 154 "matrix_3.l"
+#line 166 "matrix_3.l"
 
 
-#line 814 "lex.yy.c"
+#line 826 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -871,19 +883,19 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 156 "matrix_3.l"
+#line 168 "matrix_3.l"
 { static int row_counter = 0; process_line(yytext, ++row_counter); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 157 "matrix_3.l"
+#line 169 "matrix_3.l"
 { /* end */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 159 "matrix_3.l"
+#line 171 "matrix_3.l"
 ECHO;
 	YY_BREAK
-#line 886 "lex.yy.c"
+#line 898 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1886,7 +1898,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 159 "matrix_3.l"
+#line 171 "matrix_3.l"
 
 
 int main(int argc, char **argv){
