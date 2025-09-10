@@ -1,0 +1,15 @@
+Row 2 original: 0
+Row 2 d': 0++
+Row 2 d' with maximal features: 0++
+Row 2 longest maximal feature: <none>
+
+Row 3 original: 0
+Row 3 d': +++
+Row 3 d' with maximal features: +++
+Row 3 longest maximal feature: <none>
+
+Row 4 original: 1
+Row 4 d': +0-
+Row 4 d' with maximal features: (+0-)
+Row 4 longest maximal feature: +0- (length 3)
+

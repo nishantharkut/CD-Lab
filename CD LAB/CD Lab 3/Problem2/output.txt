@@ -1,0 +1,16 @@
+Lexical Output:
+int is a keyword
+float is a keyword
+a1 is an identifier
+25 is a constant
+b is an identifier
+hello is an identifier
+1 is a constant
+b is an identifier
+56 is a constant
+Number of Keywords : 2
+Number of Identifiers : 4
+Number of Constants : 3
+Number of Operators : 0
+Number of Punctuations : 0
+Total Tokens : 9
