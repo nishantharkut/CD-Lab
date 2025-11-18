@@ -6,7 +6,8 @@
 !CD LAB/
 !CD LAB/**
 
-# Keep .gitignore and .vscode
+# Keep .gitignore, README, and .vscode
 !.gitignore
+!README.md
 !.vscode/
 !.vscode/**
