@@ -1,1 +1,10 @@
-ACD.zip
+# Ignore everything
+*
+*/
+
+# Except the CD LAB folder and its contents
+!CD LAB/
+!CD LAB/**
+
+# Keep .gitignore itself
+!.gitignore
