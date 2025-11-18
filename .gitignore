@@ -1,10 +1,12 @@
-# Ignore everything
+# Ignore everything except CD LAB folder
 *
 */
 
-# Except the CD LAB folder and its contents
+# Keep CD LAB folder
 !CD LAB/
 !CD LAB/**
 
-# Keep .gitignore itself
+# Keep .gitignore and .vscode
 !.gitignore
+!.vscode/
+!.vscode/**
